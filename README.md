@@ -1,11 +1,21 @@
-# Getting started with Quarkus
+# Re-producer for FaultToleranceDefinitionException in Quarkus 2.0
 
-This is a minimal CRUD service exposing a couple of endpoints over REST.
+After migrating to Quarkus 2.0, @Retry throws the following excpetion:
+```
+Caused by: javax.enterprise.inject.spi.DeploymentException: org.eclipse.microprofile.faulttolerance.exceptions.
+FaultToleranceDefinitionException: Invalid @Blocking/@NonBlocking on public java.lang.String org.acme.getting.
+started.ReactiveGreetingResource.greeting(java.lang.String): must return java.util.concurrent.CompletionStage or io.smallrye.mutiny.Uni
+```
 
-Under the hood, this demo uses:
+## How to trigger the problem
+Can be triggered by running the unit test.
 
-- RESTEasy to expose the REST endpoints
-- REST-assured and JUnit 5 for endpoint testing
+## How to mitigate the problem
+Remove retry annotation or roll back to pre Quarkus 2 version.
+
+## Why resteasy reactive and blocking resource at the same time?
+We have a common library with resteasy reactive, but not all the microservices moved to full reactive yet. Hence, there are blocking 
+endpoints.
 
 ## Requirements
 
